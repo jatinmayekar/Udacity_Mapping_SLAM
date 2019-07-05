@@ -37,9 +37,9 @@ and then tries to resolve all this contsraints to create the most likely map giv
    
  - Posterior Probaility 
    * Mapping wth known poses can be represented as P(m | z(1:t),x(1:t)) function
-     x - pose nd z - measurements, so P is the posterior probablility over the        map given all the measurements(z) up to time t and all the poses(x) up to        time t represented by the robot's trajectory.
+     x - pose nd z - measurements, so P is the posterior probablility over the        map given all the measurements(z) up to time t and all the poses(x) up to        time t represented by the robot's trajectory
    * For 2D maps - use laser rangefinder - capture slice of 3D world - merge at        instant - partitioned into grid cells - estimate posterior through occupancy
-     grid mapping algorithm.
+     grid mapping algorithm
    * For 3D maps -  can be done by occupancy grid mapping - but - much higher          computational memory - large no of noisy measurements - need filtering
    
  -  |     Robotics Challenge      |         Probability Equations       | 
@@ -49,7 +49,7 @@ and then tries to resolve all this contsraints to create the most likely map giv
     |        SLAM                 |     P( x(1:t), m \| z(1:t), u(1:t) )|
     
  - Grid Cells
-    * Each grid - hold one value - either 0 or 1 - binary values.
+    * Each grid - holds one value - either 0 or 1 - binary
     * Free or unoccupied space - 0
     * Obstacle or occupied space - 1
     * No of possible maps for a grid m\*n (rows \* columns) = 2 ^ (m\*n)
@@ -58,7 +58,7 @@ and then tries to resolve all this contsraints to create the most likely map giv
  - Three approcahes to calculate the posterior
     * P( m \| z(1:t), x(1:t) ) - Very high computational power
     * P( m(i) \| z(1:t), x(1:t) ) - Compute probablity of each cell independently
-    * \|\| (i) P( m(i) \| z(1:t), x(1:t) ) - Relates cells & overcomes the huge computational memory to estimate the map with the product of marginals or factorization.
+    * \|\| (i) P( m(i) \| z(1:t), x(1:t) ) - Best approach - Relates cells & overcomes the huge computational memory to estimate the map with the product of marginals or factorization.
     
     
     
