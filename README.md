@@ -73,6 +73,14 @@ and then tries to resolve all this contsraints to create the most likely map giv
     * Inverse Measurement Model - P(x | z<sub>1:t</sub>): Estimating a posterior over the system state given the measurement.
     * The inverse measurement model is generally used when measurements are more complex than the system's state.
     
+ - Binary Bayes Filter Algorithm
+    * l<sub>t</sub> = l<sub>t-1</sub> + log( p(x | z<sub>1:t</sub>) / (1 - p(x | z<sub>1:t</sub>) ) - log( p(x) / 1 - p(x) )
+    * New belief = l<sub>t</sub>
+    * Previous belief = l<sub>t-1</sub>
+    * Log odd of the inverse measurements model = log( p(x | z<sub>1:t</sub>) / (1 - p(x | z<sub>1:t</sub>) )
+    * Initial belief = log( p(x) / 1 - p(x) ) - Represents the initial state of the system before taking any sensor measurements into consideration
+    
+    
     
     
     
