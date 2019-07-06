@@ -36,7 +36,7 @@ and then tries to resolve all this contsraints to create the most likely map giv
    known and non-noisy is referred to as mapping with known poses. In SLAM,          mapping is done with unknown poses and then occupancy grid mapping uses these    exact same posesand noisy measurements to generate a (posterior)map for path      plannig and navigation.
    
  - Posterior Probaility 
-   * Mapping wth known poses can be represented as P(m | z(1:t),x(1:t)) function
+   * Mapping wth known poses can be represented as P(m | z<sub>1:t</sub>,x<sub>1:t</sub>) function
      x - pose nd z - measurements, so P is the posterior probablility over the        map given all the measurements(z) up to time t and all the poses(x) up to        time t represented by the robot's trajectory
    * For 2D maps - use laser rangefinder - capture slice of 3D world - merge at        instant - partitioned into grid cells - estimate posterior through occupancy
      grid mapping algorithm
@@ -44,9 +44,9 @@ and then tries to resolve all this contsraints to create the most likely map giv
    
  -  |     Robotics Challenge      |         Probability Equations       | 
     | --------------------------- | ----------------------------------- |
-    |        Localization         |     P( x(1:t) \| z(1:t), m, u(1:t) )|
-    |        Mapping              |     P( m \| z(1:t), x(1:t) )        |
-    |        SLAM                 |     P( x(1:t), m \| z(1:t), u(1:t) )|
+    |        Localization         |     P( x<sub>1:t</sub> \| z<sub>1:t</sub>, m, u<sub>1:t</sub> )|
+    |        Mapping              |     P( m \| z<sub>1:t</sub>, x<sub>1:t</sub> )        |
+    |        SLAM                 |     P( x<sub>1:t</sub>, m \| z</sub>1:t</sub>, u<sub>1:t</sub> )|
     
  - Grid Cells
     * Each grid - holds one value - either 0 or 1 - binary
@@ -56,9 +56,23 @@ and then tries to resolve all this contsraints to create the most likely map giv
     * No of grid cells = m \* n
     
  - Three approcahes to calculate the posterior
-    * P( m \| z(1:t), x(1:t) ) - Very high computational power
-    * P( m(i) \| z(1:t), x(1:t) ) - Compute probablity of each cell independently
-    * \|\| (i) P( m(i) \| z(1:t), x(1:t) ) - Best approach - Relates cells & overcomes the huge computational memory to estimate the map with the product of marginals or factorization.
+    * P( m \| z<sub>1:t</sub>, x<sub>1:t</sub> ) - Very high computational power
+    * P( m<sub>i</sub> \| z<sub>1:t</sub>, x<sub>1:t</sub> ) - Compute probablity of each cell independently
+    * \|\| <sub>i</sub> P( m<sub>i</sub> \| z<sub>1:t</sub>, x<sub>1:t</sub> ) - Best approach - Relates cells & overcomes the huge computational memory to estimate the map with the product of marginals or factorization.
+    
+ - Measurement Model Selection
+    * Due to factorization, a binary estimation problem has to be solved to identify grid cells holding static state that does not change over time. By static, it means that the state of the system does not change during sensing. 
+    * Binary Bayes filter solves this problem. It uses the log odds ratio of the belief. With static state, the belief is now a function of measurements only.
+    * bel<sub>t</sub> (x) = p(x | z<sub>1:t</sub>) -  Inverse measurement model 
+    * bel - Represents binay state of the model w.r.t. measurements 
+    * Depending upon the measuremnet value -  state of the grid is updated
+    * Log odds ratio form = l<sub>t</sub> = p(x | z<sub>t</sub>) / (1 - p( x | z<sub>t</sub>) )
+    * Advantage of using log odds ratio is to avoid probablility intabilities near 0 or 1. Another advantage relates to system speed, accuracy, and simplicity
+    * Forward vs. Inverse Measurement Model
+    * Forward Measurement Model - P(z<sub>1:t</sub> | x): Estimating a posterior over the measurement given the system state.
+    * Inverse Measurement Model - P(x | z<sub>1:t</sub>): Estimating a posterior over the system state given the measurement.
+    * The inverse measurement model is generally used when measurements are more complex than the system's state.
+    
     
     
     
