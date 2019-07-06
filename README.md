@@ -82,12 +82,14 @@ and then tries to resolve all this contsraints to create the most likely map giv
     
  - Occupancy Grid Mapping Algorithm
     * for all cells m<sub>i</sub> do
-    *    if m<sub>i</sub> in perceptual filed of z<sub>t</sub> then
-    *       l<sub>t,i</sub> = l<sub>t-1,i</sub> + log( p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub>) / (1 - p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub> ) - log( p(m<sub>i</sub>) / 1 - p(m<sub>i</sub>)
-    *    else 
-    *       l<sub>t,i</sub> = l<sub>t-1,i</sub>
-    *    end if
+    * if m<sub>i</sub> in perceptual filed of z<sub>t</sub> then
+    * l<sub>t,i</sub> = l<sub>t-1,i</sub> + log( p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub>) / (1 - p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub> ) - log( p(m<sub>i</sub>) / 1 - p(m<sub>i</sub>)
+    * else 
+    * l<sub>t,i</sub> = l<sub>t-1,i</sub>
+    * end if
     * endfor
+    
+    
     
     
     
