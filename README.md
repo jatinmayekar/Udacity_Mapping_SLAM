@@ -11,7 +11,7 @@ Robot must construct map of the environment while simulataneoulsy localizing
 5. GraphSLAM - Uses constraints to relate between robot poses and the environment,
 and then tries to resolve all this contsraints to create the most likely map given the data. Implementation of Graph-SLAM - RTABmap (Real Time Appearance Mapping)
 
-## Ocupancy Grip Mapping
+## Ocupancy Grid Mapping
 
 - Localization
   * Assumption - Known Map
@@ -80,6 +80,14 @@ and then tries to resolve all this contsraints to create the most likely map giv
     * Log odd of the inverse measurements model = log( p(x | z<sub>1:t</sub>) / (1 - p(x | z<sub>1:t</sub>) )
     * Initial belief = log( p(x) / 1 - p(x) ) - Represents the initial state of the system before taking any sensor measurements into consideration
     
+ - Occupancy Grid Mapping Algorithm
+    * for all cells m<sub>i</sub> do
+    *    if m<sub>i</sub> in perceptual filed of z<sub>t</sub> then
+    *       l<sub>t,i</sub> = l<sub>t-1,i</sub> + log( p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub>) / (1 - p( m<sub>i</sub> | z<sub>t</sub>, x<sub>t</sub> ) - log( p(m<sub>i</sub>) / 1 - p(m<sub>i</sub>)
+    *    else 
+    *       l<sub>t,i</sub> = l<sub>t-1,i</sub>
+    *    end if
+    * endfor
     
     
     
