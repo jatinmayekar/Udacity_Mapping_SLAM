@@ -97,6 +97,9 @@ and then tries to resolve all this contsraints to create the most likely map giv
        
   ![Map](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/Map.png)
   
+  Ignore this warning when compiling
+  ![Warining](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/ogm_warning.png)
+  
   
     
     
