@@ -100,7 +100,15 @@ and then tries to resolve all this contsraints to create the most likely map giv
   Ignore this warning when compiling
   ![Warining](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/ogm_warning.png)
   
-  
+ - MultiSensor Fusion
+ * LIDAR sensor and RGBD sensor
+ * Intuitive way - Build the occupancy grid mapping algorithm and solve for each sensor model(integrate in Zk) but this will fail as 
+     * Each sensor has different characteristics
+     * Different senstivity wrt to obstacles
+ * Best approach - build seperate maps for each sensor model independent of each model and then integrate them
+ * Use DeMorgans's Law(best) or take the maximum probability or perform a null operation
+ * DeMorgan's Law: p(m<sub>i</sub>) = 1 - ||<sub>k</sub> (1 - p(m<sub>i</sub><sup>k</sup>))
+ * where k is the no of sensors hence the no of maps
     
     
     
