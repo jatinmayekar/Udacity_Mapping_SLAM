@@ -89,6 +89,16 @@ and then tries to resolve all this contsraints to create the most likely map giv
     * end if
     * endfor
     
+  - Viusalization of Map created using Occupancy grid mapping algorithm
+  * Legend
+       * Black - Occupied state
+       * Red -  Free state
+       * Green - Unknown state
+       
+  ![Map](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/Map.png)
+  
+  
+    
     
     
     
