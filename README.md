@@ -21,7 +21,7 @@ and then tries to resolve all this contsraints to create the most likely map giv
   * Assumption - Robot's Trajectory
   * Estimation - Known Map
   
- - Mapping is important in dynamic environment and as well as in static                environments because sesnor measurements are always noisy and accumulate errors,    and may at times produce a low accuracy map. It's always better to map a static    environment and aim to correctthe noise to obtain a high accuracy map.
+ - Mapping is important in dynamic environment and as well as in static environments because sesnor measurements are always noisy and accumulate errors, and may at times produce a low accuracy map. It's always better to map a static environment and aim to correct the noise to obtain a high accuracy map.
  
  - Challenges & Difficulties of Mapping
     1. Unkown map
@@ -90,7 +90,7 @@ and then tries to resolve all this contsraints to create the most likely map giv
     * endfor
     
   - Viusalization of Map created using Occupancy grid mapping algorithm
-  * Legend
+     * Legend
        * Black - Occupied state
        * Red -  Free state
        * Green - Unknown state
@@ -101,25 +101,25 @@ and then tries to resolve all this contsraints to create the most likely map giv
   ![Warining](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/ogm_warning.png)
   
  - MultiSensor Fusion
- * LIDAR sensor and RGBD sensor
- * Intuitive way - Build the occupancy grid mapping algorithm and solve for each sensor model(integrate in Zk) but this will fail as 
-     * Each sensor has different characteristics
-     * Different senstivity wrt to obstacles
- * Best approach - build seperate maps for each sensor model independent of each model and then integrate them
- * Use DeMorgans's Law(best) or take the maximum probability or perform a null operation
- * DeMorgan's Law: p(m<sub>i</sub>) = 1 - ||<sub>k</sub> (1 - p(m<sub>i</sub><sup>k</sup>))
- * where k is the no of sensors hence the no of maps
+    * LIDAR sensor and RGBD sensor
+    * Intuitive way - Build the occupancy grid mapping algorithm and solve for each sensor model(integrate in Zk) but this will fail as 
+       * Each sensor has different characteristics
+       * Different senstivity wrt to obstacles
+    * Best approach - build seperate maps for each sensor model independent of each model and then integrate them
+    * Use DeMorgans's Law(best) or take the maximum probability or perform a null operation
+    * DeMorgan's Law: p(m<sub>i</sub>) = 1 - ||<sub>k</sub> (1 - p(m<sub>i</sub><sup>k</sup>))
+    * where k is the no of sensors hence the no of maps
  
  - 3D Mapping
- * 2D and 3D maps(more) - computationally expensive to build and maintain
- * Collect 3D data using various tech:
-     * 3D Lidar - single sensor array of beams stacked horizontally 
-     * 2D Lidar - tilted or rotated 360 deg to obtain 3D coverage
-     * RGBD camera  - single visual camera + laser rangefinder or infrared depth sensor - allows for  determination of depth of image - hence distance of object
-     * Stereo camera - A  pair of offset cameras - used to directly infer distance of close objects - same as human eyes
-     * Single camera - Cheap - Small - Complex monocular SLAM - Depth cannot be inferred directly -  calculated by analysing data from a sequence of frames in a video
+    * 2D and 3D maps(more) - computationally expensive to build and maintain
+    * Collect 3D data using various tech:
+       * 3D Lidar - single sensor array of beams stacked horizontally 
+       * 2D Lidar - tilted or rotated 360 deg to obtain 3D coverage
+       * RGBD camera  - single visual camera + laser rangefinder or infrared depth sensor - allows for  determination of depth of image - hence distance of object
+       * Stereo camera - A  pair of offset cameras - used to directly infer distance of close objects - same as human eyes
+       * Single camera - Cheap - Small - Complex monocular SLAM - Depth cannot be inferred directly -  calculated by analysing data from a sequence of frames in a video
      
-  * 3D data representations
+  - 3D data representations
      * Desired charactersitics:
         * Probabilistic -  accomodate sensor noise and dynamic environments
         * Distinguish data between free and unknown space  - enable robot to plan an unobstructed path and build a complete map
@@ -146,6 +146,28 @@ and then tries to resolve all this contsraints to create the most likely map giv
        * Supports multi-resolution map queries - min. voxel size - determines the resolution
        * Tree pruining is also used to remove the redudancy between discrete occupancy states - achieved by defining a threshold probability for a free or occupied voxel - childrren that are identical to the parent can be pruned - 
        * Memory efficiency is achieved by using a compression methods that produces compact map files - coherent vlumes are locally combined including both mapped free areas and occupied space 
+       
+   - SLAM 
+     * Challenging as both poses and map are unknown
+     * Also called as "CLAM - Concurrent Localization and Mapping"
+     * Input = Measurment +  Controls
+     * Output = Map + Trajectory
+     * Two types of SLAM 
+        * Online SLAM
+           * At time t, the robot will estimate its new pose xt and the map m given only its current measurements zt and controls ut.
+           * It solves instantaneous poses using current measurements and controls independently from previous measurements ad controls - estimate variables that occur at time t only
+           * Problem can be modeled by probability equation: p ( x<sub>t</sub>, m : z<sub>1:t</sub>, u<sub>1:t</sub>) where the posterior is solved by instantaneous pose and the map given the current measurements and controls
+           * Posterior over the current pose
+           ![Online SLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/Online%20SLAM_1.png)
+        * Full SLAM
+           * Estimate entire path upto time t instead of a instantaneous pose given all measurements and controls
+           * Problem can be modeled by probability equation: p ( x<sub>1:t</sub>, m : z<sub>1:t</sub>, u<sub>1:t</sub>)
+           * Posterior over the entire path 
+           ![Offline SLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/Full_Offline%20SLAM.png)
+           
+        * Realtion between Online and Full SLAM
+        ![Offline SLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/RelationSLAM.png)
+         
        
     
     
