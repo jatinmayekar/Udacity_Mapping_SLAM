@@ -182,6 +182,45 @@ and then tries to resolve all this contsraints to create the most likely map giv
       * Continuous - encounter many objects - keep track of them - no. of variables increases - makes the problem highly dimensional and challenging to compute the posterior
       * Discreet - Large correspondence values  - increase exponentially 
       * Therfore SLAM algorithms will have to rely on approximation while estimating a posterior in order to conserve computational memory
+      
+   * FastSLAM
+      * Adding map as a new dimension to particle in MCL fails - as map is modeled with any variables - high dimensionality - particle filter approach to SLAM in this current form will scale exponentially and is doomed to fail
+      * It uses a custom particle filter approach to solve full SLAM problem with known correspondences      
+      * Uses a particles to estimate posterior over the robot path along the map
+      * Each of this particle holds the robot trajectory which will give an advantage to SLAM to solve the problem of mapping with known poses
+      * Each of the particle also holds a map and each feature of the map is represented by a local Gaussian
+      * The main problem is now divide into seperate independent problem, each of which aims to solve the problem of estimating the features of the map
+      * To solve this independent mini problem, fastSLAM uses low dimensional extended kalman filter
+      * While map features are expressed independently, dependency exists only between the robot pose uncertainity
+      * This custom approach of representing posterior with particle filter and Gaussian is called Rao-Blackwellized Particle Filter One
+      * Estimating the Trajectory: FastSLAM estimates a posterior over the trajectory using a particle filter approach. This will give an advantage to SLAM to solve the problem of mapping with known poses
+      * Estimating the Map: FastSLAM uses a low dimensional Extended Kalman Filter to solve independent features of the map which are modeled with local Gaussian
+      * Capable of solving both the Full SLAM and Online SLAM problems
+           * FastSLAM estimates the full robot path, and hence it solves the Full SLAM problem
+           * On the other hand, each particle in FastSLAM estimates instantaneous poses, and thus FastSLAM also solves the Online SLAM problem
+      * Three diferent instances of Fast SLAM:
+          * FastSLAM 1.0
+               - Simple and easy to implement
+               - Inefficient as particle filters generate sample inefficiency
+               - Landmark based algo - therefore not able to model an arbitrary environment
+          * FastSLAM 2.0
+               - overcomes this inefficiency by implementing different distribution which generates low no of particles
+               - Keep in mind that both of the FastSLAM 1.0 and 2.0 algorithms use a low dimensional Extended Kalman filter to estimate the posterior over the map features
+               - Landmark based algo - therefore not able to model an arbitrary environment
+          * Grid-based FastSLAM
+               - Adpats FastSLAM to grid maps - extends to occupancy grid mapping
+               - Non-landmark based algo - can model and solve in an arbitrary environment 
+               
+   * Grid-based FastSLAM
+      * Probability equation: p(x<sub>0:t</sub>, m : z<sub>1:t</sub>, u<sub>1:t</sub>) = p(x<sub>0:t</sub>: z<sub>1:t</sub>, u<sub>1:t</sub>) * p (m : x<sub>1:t</sub>, z<sub>1:t</sub>) [Robot trajectory * map]
+      * The grid-based FastSLAM algorithm will update each particle by solving the mapping with known poses problem using the occupancy grid mapping algorithm
+      * Three different techniques represented by three different probability functions to adapt fast SLAM to grid mapping:
+          * Sampling motion - p(x<sub>t</sub>: x<sub>t</sub><sup>k</sup>, u<sub>t</sub>) Estimates the current pose given the k-th particle previous pose and the current controls u - solved by MCL
+          * Map estimation - p(m<sub>t</sub>: z<sub>t</sub>, x<sub>t</sub><sup>k</sup>, m<sub>t-1</sub><sup>k</sup>) - Estimates the current map given the current measurements, the current k-th particle pose, and the previous k-th particle map - solved by Occupancy Grid Mapping 
+          * Importance weight - p(z<sub>t</sub>: x<sub>t</sub><sup>k</sup>, m<sub>t</sub><sup>k</sup>)Estimates the current likelihood of the measurement given the current k-th particle pose and the current k-th particle map - solved by MCL
+          
+
+
        
     
     
