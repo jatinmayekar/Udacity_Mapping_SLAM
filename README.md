@@ -152,9 +152,9 @@ and then tries to resolve all this contsraints to create the most likely map giv
      * Also called as "CLAM - Concurrent Localization and Mapping"
      * Input = Measurment +  Controls
      * Output = Map + Trajectory
-     * Two types of SLAM 
+     * Two forms of SLAM 
         * Online SLAM
-           * At time t, the robot will estimate its new pose xt and the map m given only its current measurements zt and controls ut.
+           * At time t, the robot will estimate its new pose xt and the map m given only its current measurements zt and controls ut
            * It solves instantaneous poses using current measurements and controls independently from previous measurements ad controls - estimate variables that occur at time t only
            * Problem can be modeled by probability equation: p ( x<sub>t</sub>, m : z<sub>1:t</sub>, u<sub>1:t</sub>) where the posterior is solved by instantaneous pose and the map given the current measurements and controls
            * Posterior over the current pose
@@ -167,7 +167,21 @@ and then tries to resolve all this contsraints to create the most likely map giv
            
         * Realtion between Online and Full SLAM
         ![Offline SLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/RelationSLAM.png)
+        
+   * Nature of SLAM
+      * Continous -  Object locations(sense environment for landmarks or objects) + Poses(odometry) 
+      * Discrete - SLAM algorithms have to identify if a relation exists between the newly detected object and the previously detected object - helps robot identify if it has been in this location before - Answer to this binary -yes or no - that's what makes it discreet - Correspondence
+      
+   * Correspondence
+      * Online SLAM - p (x<sub>t</sub>, m, c<sub>t</sub> : z<sub>1:t</sub>, u<sub>1:t</sub>)
+      * Full SLAM - p ( x<sub>1:t</sub>, m, c<sub>1:t</sub> : z<sub>1:t</sub>, u<sub>1:t</sub>)
+      * Reason to consider it - To help robot better understand its position by establishing relation between objects
+      ![Correspondence](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/RelationSLAM_C.png)
          
+   * SLAM Challenges
+      * Continuous - encounter many objects - keep track of them - no. of variables increases - makes the problem highly dimensional and challenging to compute the posterior
+      * Discreet - Large correspondence values  - increase exponentially 
+      * Therfore SLAM algorithms will have to rely on approximation while estimating a posterior in order to conserve computational memory
        
     
     
