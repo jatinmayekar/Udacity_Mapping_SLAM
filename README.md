@@ -109,6 +109,44 @@ and then tries to resolve all this contsraints to create the most likely map giv
  * Use DeMorgans's Law(best) or take the maximum probability or perform a null operation
  * DeMorgan's Law: p(m<sub>i</sub>) = 1 - ||<sub>k</sub> (1 - p(m<sub>i</sub><sup>k</sup>))
  * where k is the no of sensors hence the no of maps
+ 
+ - 3D Mapping
+ * 2D and 3D maps(more) - computationally expensive to build and maintain
+ * Collect 3D data using various tech:
+     * 3D Lidar - single sensor array of beams stacked horizontally 
+     * 2D Lidar - tilted or rotated 360 deg to obtain 3D coverage
+     * RGBD camera  - single visual camera + laser rangefinder or infrared depth sensor - allows for  determination of depth of image - hence distance of object
+     * Stereo camera - A  pair of offset cameras - used to directly infer distance of close objects - same as human eyes
+     * Single camera - Cheap - Small - Complex monocular SLAM - Depth cannot be inferred directly -  calculated by analysing data from a sequence of frames in a video
+     
+  * 3D data representations
+     * Desired charactersitics:
+        * Probabilistic -  accomodate sensor noise and dynamic environments
+        * Distinguish data between free and unknown space  - enable robot to plan an unobstructed path and build a complete map
+        * Memory efficient - memory on mobile robot is limited - therefore map should be accesible to robot's main memory while mapping over a large are for a large period of time -  to accoplish this - need a memory data representation that is compact and allows for efficient updates and queries
+        
+     * Types of data representations:
+         * Point clouds -  set of data points corresponding to range measurement at defined x,y,z coordinates - flaw - exists only where things are in the world - does not distinguish between unoccupied and unknown states - stores a large amount of measurement points - each scan requires more memory - memory inefficient
+         * Voxels - Volumetric data representation using a grid of cubic volumes of equal size - probabilistic memory representation - so can distinguish between free and unoccupied states - flaw - needs info on size of area known or approximated before measurement - seconly, complete map must be allocated in memory so memory requirement is high
+         * Octrees - memory efficient tree based data representation - can be dynamically expanded to different resoltuions and different areas - where every voxel can be subdivided into 8 voxels recursively - because map volumes are not initialzed until you need to add new measurement - have been used to adapt occupancy grid mapping from 2D to 3D - introducing probabilistic represenation of occupied vs free space  
+         * 2.5D maps
+         * Elevation maps
+         * Extended elevation maps
+         * Multi-level surface (MLS)
+         
+    * OctoMap
+       * OctoMap framework is a open-source C++ library and ROS package based on Octrees
+       * can be used to generate volumetric 3D models
+       * Not a 3D SLiM solution - mapping framework and needs a pose estimate
+       * It converts and integrates point clouds into 3D occupancy maps
+       * Uses a probabilistic occupancy estimation modelled as a recursive binary bayes filter - static filter which assumes the environment does not change 
+       * Efficient updates are achieved using the log odds notation
+       * Represented volumeterically with modeling of free, occupied and unmapped areas
+       * Upper and lower limits are placed on the log odds notation to limit the no. of updates required to change the state of voxel
+       * Supports multi-resolution map queries - min. voxel size - determines the resolution
+       * Tree pruining is also used to remove the redudancy between discrete occupancy states - achieved by defining a threshold probability for a free or occupied voxel - childrren that are identical to the parent can be pruned - 
+       * Memory efficiency is achieved by using a compression methods that produces compact map files - coherent vlumes are locally combined including both mapped free areas and occupied space 
+       
     
     
     
