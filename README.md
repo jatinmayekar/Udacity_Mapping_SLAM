@@ -219,6 +219,8 @@ and then tries to resolve all this contsraints to create the most likely map giv
           * Map estimation - p(m<sub>t</sub>: z<sub>t</sub>, x<sub>t</sub><sup>k</sup>, m<sub>t-1</sub><sup>k</sup>) - Estimates the current map given the current measurements, the current k-th particle pose, and the previous k-th particle map - solved by Occupancy Grid Mapping 
           * Importance weight - p(z<sub>t</sub>: x<sub>t</sub><sup>k</sup>, m<sub>t</sub><sup>k</sup>)Estimates the current likelihood of the measurement given the current k-th particle pose and the current k-th particle map - solved by MCL
           
+      * gmapping ROS package
+         * Provies laser based SLAM - feed its node with the robot laser measurements and odometry values and expect it to provide you with a 2D occupancy grid map of the environment. The map will be updated as the robot moves and collect sensory information using its laser range finder sensor.
 
 
        
