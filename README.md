@@ -304,6 +304,34 @@ and then tries to resolve all this contsraints to create the most likely map giv
           * Until convergence:(Iterative Optimization)
           * Linearize all constraints about an estimate, mu μ, and add linearized constraints to the information matrix & vector
           * Solve system of equations using μ = Ω<sup>-1</sup> * ξ
+          
+          
+   * 3D RTAB-Map
+       * RTAB - Real Time Apperance Based mapping
+       * Appearance-Based SLAM - Algo uses data collected from vision sensors to localize the robot and map the environment
+       * Loop Closure is used to determine whether the robot has seen a locatioin before - as the robot travels in the environment - the no of images each new image has to be compared with increases - takes loop closure longer - increases the complexity linearly
+       * RTAB - map is optimized for large scale and long term SLAM - loop closure is fast enough that the result can be obtained before the next camera image is acquired
+       * Front-end
+           * Focuses on sensor data used to obtain constraints for feature optimization approaches
+           * Only odometry and loop closure constraints are considered here unlike the landmark constraints used in 2D-graphSLAM methods
+           * Odometry constraints - Wheel encoders, IMU, lighter or visual odometry(SURF)
+           * No metric graph SLAM - RTAB-map - no metric information - possible using monocular camera to detect loop closure
+           * Metric graph SLAM - RTAB-map - metric information - using RGB-D camera - using geometric constraints to detect loop closure - laser range finder - improve or refine this geometric constraint by providing a more porecise localization
+           * Also involves graph management including node creation, and loop closure detetion using bag-of-words 
+       * Back-end
+          * Graph optimization
+          * Map output - 2D or 3D map generation
+       * Loop closure detetcion 
+          * Process of finding a match betwen current and preciously visited locations in SLAM
+          * Two types - Local & Global
+          * Local - Loop closure detetcion using positions from limited map region - depends on odometry - size and location of this limited map region is detected by the uncertianty associated with the robot's position - so fails if the estimated position is incorrect
+          * Global - new location is compared to previously viewed location - if no match is found - new location is added to memory - as map grows - time to check increases linearly - if the time taken to search and compare new images to the ones stored in memory becomes larger than the acquisition time then the map becomes ineffective
+          * RTAB map uses a global loop closure approach along with other techniques to ensure local loop closure happens in real time
+          ![Loop closure](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/loop_closure.png)
+          * When loop closure is disabled, you can see parts of the map output that are repeated, and the resulting map looks a lot more choppy. It is not an accurate representation of the environment. This is caused by the robot not using loop closure to compare new images and locations to ones that are previously viewed, and instead it registers them as new locations. When loop closure is enabled, the map is significantly smoother and is an accurate representation of the room.For example, on the left, where loop closure is disabled, you'll see highlighted where the door is represented as multiple corners and parts of a door, where on the right, you see a single clearly defined door.
+          
+          * 
+       
          
      
 
