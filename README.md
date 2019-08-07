@@ -285,7 +285,25 @@ and then tries to resolve all this contsraints to create the most likely map giv
             * A measurement constraint ties together the feature and the pose from which is was measured
             * Each operation updates 4 cells in the information matrix and 2 cells in the information vector
             * All other cells remain 0. Matrix is called ‘sparse’ due to large number of zero elements
-            * Sparsity is a very helpful property for solving the system of equations.
+            * Sparsity is a very helpful property for solving the system of equations
+            
+       * Solution -  μ = Ω<sup>-1</sup> * ξ
+          * The efficiency of this operation, specifically the matrix inversion, depends greatly on the topology of the system
+          * Linear topology - If the robot moves through the environment once, without ever returning to a previously visited location, then the topology is linear. Such a graph will produce a rather sparse matrix that, with some effort, can be reordered to move all non-zero elements to near the diagonal. This will allow the above equation to be completed in linear time.
+          
+          * Cyclic topology - A more common topology is cyclical, in which a robot revisits a location that it has been to before, after some time has passed. In such a case, features in the environment will be linked to multiple poses - ones that are not consecutive, but spaced far apart. The further apart in time that these poses are - the more problematic, as such a matrix cannot be reordered to move non-zero cells closer to the diagonal. The result is a matrix that is more computationally challenging to recover. - However, all hope is not lost - a variable elimination algorithm can be used to simplify the matrix, allowing for the inversion and product to be computed quicker.
+          
+          * Variable elimination entails removing a variable (ex. feature) entirely from the graph and matrix by adjusting existing links or adding new links to accommodate for those links that will be removed - If you recall the spring analogy, variable elimination removes features, but keeps the net forces in the springs unaltered by adjusting the tension on other springs or adding new springs where needed. 
+            
+       * Non Linear constraint
+           * Nonlinear constraints can be linearized using Taylor Series, but this inevitably introduces some error. To reduce this error, the linearization of every constraint must occur as close as possible to the true location of the pose or measurement relating to the constraint. To accomplish this, an iterative solution is used, where the point of linearization is improved with every iteration. After several iterations, the result, \muμ, becomes a much more reasonable estimate for the true locations of all robot poses and features.
+
+      * The workflow for GraphSLAM with nonlinear constraints is summarized below:
+
+          * Collect data, create graph of constraints,
+          * Until convergence:(Iterative Optimization)
+          * Linearize all constraints about an estimate, mu μ, and add linearized constraints to the information matrix & vector
+          * Solve system of equations using μ = Ω<sup>-1</sup> * ξ
          
      
 
