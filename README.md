@@ -220,7 +220,74 @@ and then tries to resolve all this contsraints to create the most likely map giv
           * Importance weight - p(z<sub>t</sub>: x<sub>t</sub><sup>k</sup>, m<sub>t</sub><sup>k</sup>)Estimates the current likelihood of the measurement given the current k-th particle pose and the current k-th particle map - solved by MCL
           
       * gmapping ROS package
-         * Provies laser based SLAM - feed its node with the robot laser measurements and odometry values and expect it to provide you with a 2D occupancy grid map of the environment. The map will be updated as the robot moves and collect sensory information using its laser range finder sensor.
+         * Provies laser based SLAM - feed its node with the robot laser measurements and odometry values and expect it to provide you with a 2D occupancy grid map of the environment. The map will be updated as the robot moves and collect sensory information using its laser range finder sensor
+         
+      * Grid-based SLAm gif
+      
+  * GraphSLAM
+     * Solves the full SLAM problem - recovers entire path and map - instead of just the recent pose and map
+     * This difference allows it consider dependencies between current and previous poses 
+     * Reduced need for significant onboard processing capability
+     * Improved accuracy over FastSLAM - FastSLAM uses bit of info with finite no. of particles - chances(slim to none) are that a particle is not present at the most likely position - room for error - GraphSLAM works with all the data at once to find the optimal solution 
+     * Summary of Notation
+         * Poses are represented with triangles.
+         * Features from the environment are represented with stars.
+         * Motion constraints tie together two poses, and are represented by a solid line.
+         * Measurement constraints tie together a feature and a pose, and are represented by a dashed line.
+     * Soft constraint 
+         * Called as soft - coz they have certain amout of error in them as motion and measurement are uncertain
+         * Two forms - 
+             * Motion constraint - between two succesive robot poses
+             * Measurement constraint - between pose and feature of environment
+         ![GraphSLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/graphSLAM1.png)
+         * Every motion or measurement update pulls the system closer to the constraint's desired state - sill error present
+         * Goal is to create a node distribution that minimises the overall constraint error
+      * Front-end vs Back-end
+          * Front-end 
+               * Looks at how to construct the graph from the odometry and sensory measurements collectd by the robot
+               * Includes interpreting the sensory data, creating the graph and continuing to add nodes and edges to it as thre robot traverses the environment
+               * It can differ based on the application in terms of accuracy, sensor used, ect.
+               * Challenge of solving the data associated problem - meaning - indentifying whether features in the environment have been previously seen
+           * Back-end
+               * Input - completed graphs with all of the constraints
+               * Output - most probable configuration(smallest error) of robot poses and map features
+               * Lot more consistent across applications
+               * Both can be performed in succession or alternatively(with back-end feeding an updated graph to the front-end for further processing)
+               
+       * Maximum Likelihood Estimation
+           * Likelihood
+               * Likelihood is a complementary principle to probability. While probability tries to estimate the outcome given the parameters, likelihood tries to estimate the parameters that best explain the outcome
+               * In SLAM, it estimates the most likely configuration of state and feature locations given the motion and the measurement observations
+            *  Procedure - analytical solution to an MLE problem
+                * Removing inconsequential constants
+                * Converting the equation from one of likelihood estimation to one of negative log-likelihood estimation
+                * Calculating the first derivative of the function and setting it equal to zero to find the extrema
+                
+            * In GraphSLAM, the first two steps can be applied to every constraint. Thus, any measurement or motion constraint can simply be labelled with its negative log-likelihood error. 
+            * Measurement constraint : (z<sub>t</sub> - (x<sub>t</sub> + m<sub>t</sub>)) <sup>2</sup> / sigma<sup>2</sup> 
+            * Motion constraint : (x<sub>t-1</sub> - (x<sub>t</sub> + u<sub>t</sub>))<sup>2</sup> / sigma<sup>2</sup>
+            * Estimation function will try to minimise the summation of the measurement constraint and motion constraint
+            * sigma<sup>2</sup> can be ignored by considering the measurements were taken from the same sensor with both the measurements having the same varaince value 
+            * Analytically - takes time and computationallly expensive for multi-dimensional - therefore numerically - but sub-optimal solution
+            * Numerically - optimization algorithm - gradient descent, Levenberg-Marquardt, and conjugate gradient(common)
+            * Gradient Descent - you make an initial guess, and then adjust it incrementally in the direction opposite the gradient. Eventually, you should reach a minimum of the function - complex distributions - initial guess can affect end result - get local minima - no way to know global minima - so use stochastic gradient descent - an iterative method of gradient descent using subsamples of data
+            ![nD-GraphSLAM](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/ndgraphslam.png)
+            
+       * Information Matrix & Information Vector
+            * Elegant solution to solve a system of linear equations produced by graph of constraints
+            * Information matrix - Omega
+              * Fundamentally invese of covaraince matrix - Higher certainity - higher values - opposite of covariance
+            * Information vector - Xi
+            * No information - cell value - 0
+            * For a system with linear measurement and motion models, the info matrix and info vector can be populated in an additive manner using the additive property of negative-log likelihood of constraints
+            * x<sub>0</sub> - consider initial constraint
+            * A motion constraint ties together two poses,
+            * A measurement constraint ties together the feature and the pose from which is was measured
+            * Each operation updates 4 cells in the information matrix and 2 cells in the information vector
+            * All other cells remain 0. Matrix is called ‘sparse’ due to large number of zero elements
+            * Sparsity is a very helpful property for solving the system of equations.
+         
+     
 
 
        
