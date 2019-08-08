@@ -359,7 +359,19 @@ and then tries to resolve all this contsraints to create the most likely map giv
            * WM - fixed time limit T - when the time required to process the new data reaches T - oldest and less weighted nodes are tranferred from WM to LTM - WM size is nearly constant - WM hs nodes seen for a longer period of time
            * LTM is not use for loop closure detetion and and graph optimization
            * If a loop closure is detected, then neighbours in the LTM of an old node can be tranferred back to the WM - called as "Retrieval" - on what basis? 
-       
+           
+       * RTAB Graph Optimization
+           * Loop closure detected - a new constraint is added to map graph - graph optimizer minimizes the errors in the map
+           * Three options:
+              * Tree-based network optimizer - TORO
+              * General Graph Optimization - G2O
+              * Georgia Tech Smoothing and Mapping - GTSAM
+           * All of these optimizations use node poses and link transformations as constraints. When a loop closure is detected, errors introduced by the odometry can be propagated to all links, correcting the map. Recall that Landmarks are used in the graph optimization process for other methods, whereas RTAB-Map doesn't use them. Only odometry constraints and loop closure constraints are optimized.
+           
+      * RTAB Graph Output
+         * 2d Occupancy grid map, 3d occupancy grid map (3d octomap), or a 3D point cloud.
+         * Graph-SLAM complexity is linear, according to the number of nodes, which increases according to the size of the map.
+         * By providing constraints associated with how many nodes are processed for loop closure by memory management, the time complexity becomes constant in RTAB-Map.
         
      
          
