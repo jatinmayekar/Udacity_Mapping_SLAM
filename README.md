@@ -330,8 +330,22 @@ and then tries to resolve all this contsraints to create the most likely map giv
           ![Loop closure](https://github.com/gonfreces/Udacity_Mapping_SLAM/blob/master/loop_closure.png)
           * When loop closure is disabled, you can see parts of the map output that are repeated, and the resulting map looks a lot more choppy. It is not an accurate representation of the environment. This is caused by the robot not using loop closure to compare new images and locations to ones that are previously viewed, and instead it registers them as new locations. When loop closure is enabled, the map is significantly smoother and is an accurate representation of the room.For example, on the left, where loop closure is disabled, you'll see highlighted where the door is represented as multiple corners and parts of a door, where on the right, you see a single clearly defined door.
           
-          * 
-       
+       * Visual Bag-of-Words 
+          * RTAB mapping uses bag-of-words approach for loop closure detection
+          * Extract features
+             * A feature is a very specific characteristic of an image like a a patch with a comples texture or a well-defined edge or corner - In RTAB map - default method - extracting features - SURF - Speeded Up Robust Features
+          * Feature descriptors
+              * Each feature has a descriptor associated with it - A feature descriptor is a unique and robust representation of the pixels that make up a feature - In SURF, the point of interest where the feature is located is split into smaller square sub-regions - from these sub-regions the pixel intensities of regularly spaced samples are calculated and compared - diffrences between the sample points are used to categorize the sub-regions of the image 
+           * Clustering 
+               * Comparing feature descriptors is time consuming - vocabulary is used for faster comparison - this is where similar features or synonyms are clustered together - collection of this clusters represents vocabulary
+               * Matching a feature to vocabulary - Quantization
+               * Now a feature is linked to a word - can be referred as visual word
+               * When all features in the image are quantized - bag-of-words 
+           * Visual words
+               * Each word keeps a link(keeps a track) to images it is associated with - image retrieval more efficient over a large data set - so similar images can be found - compiled into a table called as inverted index
+               * If an image in memory shares many visual words with the query image, then it will score higher - Bayesian filter used to evaluate the scores - this is the hypothesis that the image has been seen before - when the hypothesis reaches a predefined threshold H - a loop closure is detected 
+        
+     
          
      
 
