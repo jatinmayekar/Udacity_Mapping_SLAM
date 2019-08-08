@@ -344,6 +344,22 @@ and then tries to resolve all this contsraints to create the most likely map giv
            * Visual words
                * Each word keeps a link(keeps a track) to images it is associated with - image retrieval more efficient over a large data set - so similar images can be found - compiled into a table called as inverted index
                * If an image in memory shares many visual words with the query image, then it will score higher - Bayesian filter used to evaluate the scores - this is the hypothesis that the image has been seen before - when the hypothesis reaches a predefined threshold H - a loop closure is detected 
+               
+        * RTAB Memory management
+           * Long term memory (LTM)
+           * Short term memory (STM)
+           * Working memory (WM)
+           * Need - To limit the no of locations considered as candidates for loop closure detection 
+           * Strategy - To keep the most recently and frequently observed locations in the WM and transfer the others into the LTM   
+           * For every image taken, a new node is created in the STM - features are extracted - viusal words are identified by comparing with the vocabulary - a bag-of-words is created
+           * STM has a fixed size S and the nodes in the STM are not considered for loop closure detection - because they are generally very similar
+           * When the STM has reached its full capacity, the oldest and highest weighted node is moved into the working memory
+           * STM has a weight update step - heuristics is that the robot should remember where it's spent most of its time in - so longer the robot is in that location, larger the weight of the node - if two consecutive areas are similar - weight of the first node is increased by one - no new node is created for the second image
+           * This compromise between the search time and space is driven by the environment and experiences the robot has
+           * WM - fixed time limit T - when the time required to process the new data reaches T - oldest and less weighted nodes are tranferred from WM to LTM - WM size is nearly constant - WM hs nodes seen for a longer period of time
+           * LTM is not use for loop closure detetion and and graph optimization
+           * If a loop closure is detected, then neighbours in the LTM of an old node can be tranferred back to the WM - called as "Retrieval" - on what basis? 
+       
         
      
          
